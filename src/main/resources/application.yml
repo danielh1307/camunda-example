@@ -1,0 +1,12 @@
+camunda.bpm:
+  admin-user:
+    id: kermit
+    password: appl_123
+    firstName: kermit
+  filter:
+    create: All tasks
+
+spring:
+  h2:
+    console:
+      enabled: true
