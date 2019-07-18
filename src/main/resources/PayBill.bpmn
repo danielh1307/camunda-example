@@ -4,7 +4,7 @@
     <bpmn:startEvent id="StartEvent_1" name="Rechnung eingetroffen&#10;&#10;">
       <bpmn:outgoing>SequenceFlow_0tcmyn8</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_0tcmyn8" sourceRef="StartEvent_1" targetRef="Task_0ha3jbs" />
+    <bpmn:sequenceFlow id="SequenceFlow_0tcmyn8" sourceRef="StartEvent_1" targetRef="Task_0gfbzpp" />
     <bpmn:endEvent id="EndEvent_0ech6lr" name="Rechnung bezahlt">
       <bpmn:incoming>SequenceFlow_0uxupt3</bpmn:incoming>
     </bpmn:endEvent>
@@ -14,14 +14,25 @@
         <camunda:formData>
           <camunda:formField id="id_betreff" label="Betreff" type="string" defaultValue="hier Betreff eintragen" />
           <camunda:formField id="id_betrag" label="Betrag" type="long" defaultValue="0" />
+          <camunda:formField id="id_logging_delegate_output" label="Vom Logging Delegate" type="string" defaultValue="${loggingDelegateOutput}" />
         </camunda:formData>
         <camunda:inputOutput>
           <camunda:inputParameter name="Input_0gp4kff">Hier steht was</camunda:inputParameter>
         </camunda:inputOutput>
       </bpmn:extensionElements>
-      <bpmn:incoming>SequenceFlow_0tcmyn8</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_07d4tlk</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0uxupt3</bpmn:outgoing>
     </bpmn:userTask>
+    <bpmn:serviceTask id="Task_0gfbzpp" name="Logging Delegate" camunda:class="danielh1307.camundaexample.delegate.LoggingDelegate">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:outputParameter name="loggingDelegateOutput">${loggingDelegateOutput}</camunda:outputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0tcmyn8</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_07d4tlk</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_07d4tlk" sourceRef="Task_0gfbzpp" targetRef="Task_0ha3jbs" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="PayBillId">
@@ -33,21 +44,28 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0tcmyn8_di" bpmnElement="SequenceFlow_0tcmyn8">
         <di:waypoint x="209" y="120" />
-        <di:waypoint x="259" y="120" />
+        <di:waypoint x="309" y="120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="EndEvent_0ech6lr_di" bpmnElement="EndEvent_0ech6lr">
-        <dc:Bounds x="409" y="102" width="36" height="36" />
+        <dc:Bounds x="740" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="383" y="145" width="89" height="14" />
+          <dc:Bounds x="714" y="145" width="89" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0uxupt3_di" bpmnElement="SequenceFlow_0uxupt3">
-        <di:waypoint x="359" y="120" />
-        <di:waypoint x="409" y="120" />
+        <di:waypoint x="619" y="120" />
+        <di:waypoint x="740" y="120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="UserTask_11qhf1b_di" bpmnElement="Task_0ha3jbs">
-        <dc:Bounds x="259" y="80" width="100" height="80" />
+        <dc:Bounds x="519" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_1ugna85_di" bpmnElement="Task_0gfbzpp">
+        <dc:Bounds x="309" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_07d4tlk_di" bpmnElement="SequenceFlow_07d4tlk">
+        <di:waypoint x="409" y="120" />
+        <di:waypoint x="519" y="120" />
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

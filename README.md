@@ -28,3 +28,14 @@ The `id` in the URL is the id of the task. If you have a process / instance id (
 
 A variable is defined in the Input/Output tab of the task. It is not visible in the Camunda task view. But you can see (and change) it in the Camunda Cockpit (Processes detail).
  
+## Passing values
+
+To pass a value from e.g. a service task to a human task, see the concept of process variables: https://docs.camunda.org/manual/7.5/user-guide/process-engine/variables/
+
+In short, define an output varaible on the service task. If it has a final value, just write it to the value field in the modeller. Otherwise, assign a value (e.g. `${loggingDelegateOutput}`), which you can set in your code with 
+
+```java
+delegateExecution.setVariable(<NAME>, <VALUE>)
+```
+
+Now you can assign this value in the human task by using `${loggingDelegateOutput}` again.
