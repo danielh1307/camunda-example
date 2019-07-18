@@ -16,17 +16,15 @@ import java.util.List;
 public class CamundaController {
 
     private ProcessEngine processEngine;
-    private RuntimeService runtimeService;
 
-    public CamundaController(ProcessEngine processEngine, RuntimeService runtimeService) {
+    public CamundaController(ProcessEngine processEngine) {
         this.processEngine = processEngine;
-        this.runtimeService = runtimeService;
     }
 
     @PostMapping(path = "/processes")
     private String processPostDeploy(PostDeployEvent postDeployEvent) {
         // although process id is set in the .bpmn file, we have to use startProcessInstanceByKey here
-        ProcessInstance payBillId = runtimeService.startProcessInstanceByKey("PayBillId");
+        ProcessInstance payBillId = this.processEngine.getRuntimeService().startProcessInstanceByKey("PayBillId");
 
         return payBillId.getId(); // this returns ACT_HI_PROCINST.ID_
     }
@@ -36,7 +34,7 @@ public class CamundaController {
         TaskService taskService = this.processEngine.getTaskService();
 
         StringBuilder b = new StringBuilder();
-        taskService.createTaskQuery().active().list().forEach(b::append);
+        taskService.createTaskQuery().active().list().forEach((t) -> b.append(t).append("\n"));
 
         return b.toString();
     }
@@ -48,7 +46,7 @@ public class CamundaController {
 
         StringBuilder b = new StringBuilder();
         List<FormField> formFields = taskFormData.getFormFields();
-        formFields.forEach((f) -> b.append("[").append(f.getLabel()).append("=").append(f.getValue()).append("]"));
+        formFields.forEach((f) -> b.append("[").append(f.getLabel()).append("=").append(f.getValue()).append("]\n"));
 
         return b.toString();
     }
@@ -58,7 +56,7 @@ public class CamundaController {
         TaskService taskService = this.processEngine.getTaskService();
 
         StringBuilder b = new StringBuilder();
-        taskService.getVariables(id).forEach((k,v) -> b.append("[").append(k).append("=").append(v).append("]"));
+        taskService.getVariables(id).forEach((k,v) -> b.append("[").append(k).append("=").append(v).append("]\n"));
 
         return b.toString();
     }
