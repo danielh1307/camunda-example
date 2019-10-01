@@ -1,9 +1,16 @@
 package danielh1307.camundaexample.controller;
 
-import org.camunda.bpm.engine.*;
+import org.camunda.bpm.dmn.engine.DmnDecision;
+import org.camunda.bpm.dmn.engine.DmnDecisionTableResult;
+import org.camunda.bpm.dmn.engine.DmnEngine;
+import org.camunda.bpm.engine.FormService;
+import org.camunda.bpm.engine.ProcessEngine;
+import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.form.FormField;
 import org.camunda.bpm.engine.form.TaskFormData;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
+import org.camunda.bpm.engine.variable.VariableMap;
+import org.camunda.bpm.engine.variable.Variables;
 import org.camunda.bpm.spring.boot.starter.event.PostDeployEvent;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,9 +23,13 @@ import java.util.List;
 public class CamundaController {
 
     private ProcessEngine processEngine;
+    private DmnEngine dmnEngine;
+    private DmnDecision dmnDecision;
 
-    public CamundaController(ProcessEngine processEngine) {
+    public CamundaController(ProcessEngine processEngine, DmnEngine dmnEngine, DmnDecision dmnDecision) {
         this.processEngine = processEngine;
+        this.dmnEngine = dmnEngine;
+        this.dmnDecision = dmnDecision;
     }
 
     @PostMapping(path = "/processes")
@@ -59,5 +70,15 @@ public class CamundaController {
         taskService.getVariables(id).forEach((k,v) -> b.append("[").append(k).append("=").append(v).append("]\n"));
 
         return b.toString();
+    }
+
+    @GetMapping(path = "/decision/{guestCount}")
+    private String blah(@PathVariable int guestCount) {
+        VariableMap variableMap = Variables
+                .putValue("season", "Fall")
+                .putValue("guestCount", guestCount);
+        DmnDecisionTableResult dmnDecisionRuleResults = this.dmnEngine.evaluateDecisionTable(this.dmnDecision, variableMap);
+
+        return dmnDecisionRuleResults.getSingleResult().get("desiredDish").toString();
     }
 }
